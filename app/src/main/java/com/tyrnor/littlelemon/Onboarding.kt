@@ -1,22 +1,22 @@
 package com.tyrnor.littlelemon
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -26,7 +26,21 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun Onboarding() {
-    Column(Modifier.fillMaxSize()) {
+    val imeState = rememberImeState()
+    val scrollState = rememberScrollState()
+    val focusManager = LocalFocusManager.current
+
+    LaunchedEffect(key1 = imeState.value){
+        if (imeState.value){
+            scrollState.scrollTo(scrollState.maxValue)
+
+        } else {
+            focusManager.clearFocus()
+        }
+    }
+    Column(Modifier
+        .fillMaxSize()
+       ) {
         Header()
         Box(
             modifier = Modifier
@@ -42,7 +56,7 @@ fun Onboarding() {
                 text = "Let's get to know you"
             )
         }
-        RegisterForm()
+        RegisterForm(scrollState, imeState, focusManager)
     }
 
 }
@@ -69,11 +83,11 @@ fun Header() {
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun RegisterForm() {
+fun RegisterForm(scrollState: ScrollState, imeState: State<Boolean>, focusManager: FocusManager) {
 
     //val controller = LocalSoftwareKeyboardController.current
+
     val firstNameText = remember {
         mutableStateOf(value = "")
     }
@@ -84,10 +98,24 @@ fun RegisterForm() {
         mutableStateOf(value = "")
     }
     val focusManager = LocalFocusManager.current
-    Column {
-        Text(text = "Personal information")
+
+    val modifier = Modifier
+        .height(58.dp)
+        .fillMaxWidth()
+        .padding(horizontal = 16.dp)
+
+    Column ( verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier
+        .fillMaxWidth()
+        .fillMaxHeight()
+        .verticalScroll(scrollState)
+    ){
+        Text(modifier = Modifier.padding(start = 14.dp, top = 30.dp, bottom = 30.dp),
+            text = "Personal information",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold)
         OutlinedTextField(
-            modifier = Modifier,
+            modifier = modifier,
+            singleLine = true,
             value = firstNameText.value,
             onValueChange = { firstNameText.value = it },
             label = { Text(text = "First name") },
@@ -106,11 +134,13 @@ fun RegisterForm() {
                         focusManager.moveFocus(focusDirection = FocusDirection.Next)
                     }
                 }
-            }, onDone = { focusManager.clearFocus() })
+            }, onDone = { focusManager.clearFocus() }),
+            textStyle = TextStyle(fontSize = 14.sp)
         )
         OutlinedTextField(
-            modifier = Modifier,
+            modifier = modifier,
             value = lastNameText.value,
+            singleLine = true,
             onValueChange = { lastNameText.value = it },
             label = { Text(text = "Last name") },
             keyboardOptions = if (firstNameText.value.isEmpty() || emailText.value.isEmpty()) {
@@ -128,11 +158,13 @@ fun RegisterForm() {
                         focusManager.moveFocus(focusDirection = FocusDirection.Next)
                     }
                 }
-            }, onDone = { focusManager.clearFocus() })
+            }, onDone = { focusManager.clearFocus() }),
+            textStyle = TextStyle(fontSize = 14.sp)
         )
         OutlinedTextField(
-            modifier = Modifier,
+            modifier = modifier,
             value = emailText.value,
+            singleLine = true,
             onValueChange = { emailText.value = it },
             label = { Text(text = "Email") },
             keyboardOptions = if (firstNameText.value.isEmpty() || lastNameText.value.isEmpty()) {
@@ -150,7 +182,13 @@ fun RegisterForm() {
                         focusManager.moveFocus(focusDirection = FocusDirection.Next)
                     }
                 }
-            }, onDone = { focusManager.clearFocus() })
+            }, onDone = { focusManager.clearFocus() }),
+            textStyle = TextStyle(fontSize = 14.sp)
         )
+        Button(modifier= Modifier
+            .fillMaxWidth()
+            .padding(top = if (imeState.value) {0.dp} else {120.dp}, start = 16.dp, end = 16.dp), onClick = { /*TODO*/ }) {
+            Text(text = "Register")
+        }
     }
 }

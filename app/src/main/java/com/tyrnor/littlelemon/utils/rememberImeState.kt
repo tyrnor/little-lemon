@@ -1,4 +1,4 @@
-package com.tyrnor.littlelemon
+package com.tyrnor.littlelemon.utils
 
 import android.view.ViewTreeObserver
 import android.view.WindowInsets

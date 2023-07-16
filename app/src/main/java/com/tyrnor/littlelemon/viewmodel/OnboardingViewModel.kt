@@ -10,7 +10,6 @@ import javax.inject.Inject
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(): ViewModel() {
 
-    //TODO: Implement all Live Data variables and methods
     private val _firstNameText = MutableLiveData<String>()
     val firstNameText : LiveData<String> = _firstNameText
 

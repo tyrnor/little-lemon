@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.tyrnor.littlelemon.model.OnboardingModel
+import com.tyrnor.littlelemon.model.PersonalInformationModel
 import kotlinx.coroutines.flow.map
 
 const val USER_DATASTORE = "user_datastore"
@@ -21,16 +21,16 @@ class DataStoreManager (private val context: Context){
         val EMAIL = stringPreferencesKey("EMAIL")
     }
 
-    suspend fun saveToDataStore(onboardingModel: OnboardingModel){
+    suspend fun saveToDataStore(personalInformationModel: PersonalInformationModel){
         context.dataStore.edit {
-            it[FIRST_NAME] = onboardingModel.firstName
-            it[LAST_NAME] = onboardingModel.lastName
-            it[EMAIL] = onboardingModel.email
+            it[FIRST_NAME] = personalInformationModel.firstName
+            it[LAST_NAME] = personalInformationModel.lastName
+            it[EMAIL] = personalInformationModel.email
         }
     }
 
     fun getFromDataStore() = context.dataStore.data.map {
-        OnboardingModel(
+        PersonalInformationModel(
             firstName = it[FIRST_NAME]?:"",
             lastName = it[LAST_NAME]?:"",
             email = it[EMAIL]?:"",

@@ -12,13 +12,18 @@ import com.tyrnor.littlelemon.view.Onboarding
 import com.tyrnor.littlelemon.view.Profile
 import com.tyrnor.littlelemon.view.Splash
 import com.tyrnor.littlelemon.viewmodel.OnboardingViewModel
+import com.tyrnor.littlelemon.viewmodel.ProfileViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun Navigation(onboardingViewModel: OnboardingViewModel = viewModel(), dataStoreManager: DataStoreManager = DataStoreManager(
-    LocalContext.current)){
+fun Navigation(
+    onboardingViewModel: OnboardingViewModel = viewModel(),
+    profileViewModel: ProfileViewModel = viewModel(),
+    dataStoreManager: DataStoreManager = DataStoreManager(
+        LocalContext.current),
+) {
 
     val navController = rememberNavController()
 
@@ -30,29 +35,31 @@ fun Navigation(onboardingViewModel: OnboardingViewModel = viewModel(), dataStore
 
     LaunchedEffect(true) {
         delay(700)
-        coroutineScope.launch{
-            dataStoreManager.getFromDataStore().collect{
-                startDestination = if (it.email.isNotEmpty() && it.firstName.isNotEmpty() && it.lastName.isNotEmpty()){
-                    Home.route
-                } else {
-                    Onboarding.route
-                }
+        coroutineScope.launch {
+            //dataStoreManager.clearDataStore()
+            dataStoreManager.getFromDataStore().collect {
+                startDestination =
+                    if (it.email.isNotEmpty() && it.firstName.isNotEmpty() && it.lastName.isNotEmpty()) {
+                        Home.route
+                    } else {
+                        Onboarding.route
+                    }
             }
         }
     }
 
     NavHost(navController = navController, startDestination = startDestination) {
-        composable(Splash.route){
+        composable(Splash.route) {
             Splash()
         }
-        composable(Onboarding.route){
+        composable(Onboarding.route) {
             Onboarding(navController, onboardingViewModel, dataStoreManager)
         }
-        composable(Home.route){
-            Home()
+        composable(Home.route) {
+            Home(navController)
         }
-        composable(Profile.route){
-            Profile()
+        composable(Profile.route) {
+            Profile(navController,profileViewModel, dataStoreManager)
         }
     }
 }

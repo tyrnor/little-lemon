@@ -11,6 +11,7 @@ import com.tyrnor.littlelemon.view.Home
 import com.tyrnor.littlelemon.view.Onboarding
 import com.tyrnor.littlelemon.view.Profile
 import com.tyrnor.littlelemon.view.Splash
+import com.tyrnor.littlelemon.viewmodel.HomeViewModel
 import com.tyrnor.littlelemon.viewmodel.OnboardingViewModel
 import com.tyrnor.littlelemon.viewmodel.ProfileViewModel
 import kotlinx.coroutines.delay
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 fun Navigation(
     onboardingViewModel: OnboardingViewModel = viewModel(),
     profileViewModel: ProfileViewModel = viewModel(),
+    homeViewModel: HomeViewModel = viewModel(),
     dataStoreManager: DataStoreManager = DataStoreManager(
         LocalContext.current),
 ) {
@@ -56,7 +58,7 @@ fun Navigation(
             Onboarding(navController, onboardingViewModel, dataStoreManager)
         }
         composable(Home.route) {
-            Home(navController)
+            Home(navController, homeViewModel)
         }
         composable(Profile.route) {
             Profile(navController,profileViewModel, dataStoreManager)

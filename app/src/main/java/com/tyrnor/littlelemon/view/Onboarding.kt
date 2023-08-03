@@ -59,7 +59,7 @@ fun Onboarding(
         .fillMaxSize()
         .verticalScroll(scrollState)
     ) {
-        Header(backArrow = false, navController)
+        Header(backArrow = false, navController = navController, profileImage = false)
         SubHeader(color = GreenLL, text = "Let's get to know you")
         RegisterForm(imeState, navController, onboardingViewModel, dataStoreManager)
     }

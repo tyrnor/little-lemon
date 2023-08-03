@@ -40,7 +40,7 @@ fun Profile(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween) {
         Column {
-            Header(backArrow = true, navController)
+            Header(backArrow = true, navController = navController, profileImage = false)
             SubHeader(color = Color.White, text = "")
             PersonalInformation(coroutineScope, profileViewModel, dataStoreManager)
         }
